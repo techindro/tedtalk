@@ -1,0 +1,643 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>TED Talk - India's All-in-One Social Platform</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root {
+      --saffron: #FF9933;
+      --white: #fff;
+      --green: #138808;
+      --blue: #1A73E8;
+      --gray: #f5f5f5;
+      --deep: #222;
+      --gold: #ffd700;
+      --silver: #c0c0c0;
+      --bronze: #cd7f32;
+    }
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(180deg, var(--saffron) 0%, var(--white) 50%, var(--green) 100%);
+      margin: 0;
+      color: var(--deep);
+      min-height: 100vh;
+    }
+    header {
+      background: rgba(255,255,255,0.97);
+      box-shadow: 0 2px 12px rgba(0,0,0,0.07);
+      position: fixed; top: 0; left: 0; width: 100%;
+      z-index: 100;
+      padding: 8px 0;
+    }
+    nav {
+      display: flex; justify-content: space-between; align-items: center;
+      max-width: 1200px; margin: 0 auto; padding: 0 16px;
+    }
+    .logo {
+      font-size: 1.7rem; font-weight: bold; color: var(--saffron);
+      display: flex; align-items: center; gap: 8px; letter-spacing: 1px;
+    }
+    .nav-links {
+      display: flex; gap: 16px; align-items: center;
+    }
+    .nav-links a, .login-btn {
+      text-decoration: none; color: var(--deep); font-weight: 600; font-size: 16px;
+      background: none; border: none; cursor: pointer; transition: color 0.2s;
+    }
+    .nav-links a:hover, .login-btn:hover { color: var(--green);}
+    .login-btn {
+      background: linear-gradient(90deg, var(--saffron), var(--green));
+      color: #fff; padding: 8px 20px; border-radius: 20px;
+      font-weight: 700;
+    }
+    .toggle-switch {
+      display: inline-flex; align-items: center; gap: 5px; margin-left: 10px;
+    }
+    .toggle-switch input[type="checkbox"] { display: none; }
+    .toggle-switch label {
+      background: #eee; border-radius: 14px; width: 34px; height: 18px; display: inline-block; position: relative; cursor: pointer;
+      transition: background 0.3s;
+    }
+    .toggle-switch label:after {
+      content: ""; width: 14px; height: 14px; border-radius: 50%; background: var(--saffron);
+      position: absolute; left: 2px; top: 2px; transition: left 0.3s, background 0.3s;
+    }
+    .toggle-switch input[type="checkbox"]:checked + label { background: var(--green);}
+    .toggle-switch input[type="checkbox"]:checked + label:after { left: 18px; background: var(--green);}
+    .toggle-switch span { font-size: 13px; font-weight: 600;}
+    .container { max-width: 1200px; margin: 0 auto; padding: 0 16px;}
+    .hero {
+      margin-top: 65px; padding: 45px 0 25px 0; text-align: center;
+      background: rgba(255,255,255,0.9); border-radius: 0 0 40px 40px;
+      box-shadow: 0 6px 40px rgba(19,136,8,0.07);
+    }
+    .hero h1 { font-size: 2rem; color: var(--saffron); font-weight: 800;}
+    .hero p { font-size: 1.1rem; color: #222; margin-bottom: 15px;}
+    .cta-btn {
+      background: linear-gradient(90deg, var(--green), var(--saffron));
+      color: #fff; border: none; border-radius: 30px;
+      padding: 10px 22px; font-size: 1rem; font-weight: bold;
+      margin: 0 8px; cursor: pointer; transition: background 0.2s;
+    }
+    .cta-btn:hover { background: linear-gradient(90deg, var(--saffron), var(--green));}
+    .tabs {
+      display: flex; gap: 0; margin: 18px auto 0 auto; max-width: 900px; border-radius: 20px; overflow: hidden;
+      box-shadow: 0 2px 8px rgba(19,136,8,0.07);
+    }
+    .tab-btn {
+      flex: 1; padding: 13px 0; background: #fff; border: none; font-weight: 700; font-size: 1.05rem; color: var(--deep);
+      cursor: pointer; transition: background 0.2s, color 0.2s;
+    }
+    .tab-btn.active {
+      background: linear-gradient(90deg, var(--saffron), var(--green));
+      color: #fff;
+    }
+    .tab-section { display: none; }
+    .tab-section.active { display: block; }
+    /* Stories/Reels */
+    .story-bar {
+      display: flex; gap: 14px; overflow-x: auto; padding: 16px 0 8px 0; margin: 0 0 8px 0;
+      background: rgba(255,255,255,0.9);
+    }
+    .story {
+      flex: 0 0 64px; display: flex; flex-direction: column; align-items: center;
+      cursor: pointer;
+    }
+    .story-img {
+      width: 52px; height: 52px; border-radius: 50%; border: 2.5px solid var(--saffron);
+      object-fit: cover; margin-bottom: 4px;
+    }
+    .story.add .story-img { border: 2.5px dashed var(--green);}
+    .story span { font-size: 12px; color: var(--deep);}
+    /* Feed */
+    .feed-section { max-width: 600px; margin: 14px auto 0 auto;}
+    .post-card {
+      background: #fff; border-radius: 16px; box-shadow: 0 4px 18px rgba(19,136,8,0.08);
+      margin-bottom: 14px; padding: 13px 12px 8px 12px;
+      position: relative;
+    }
+    .post-header { display: flex; align-items: center; gap: 9px;}
+    .post-profile {
+      width: 34px; height: 34px; border-radius: 50%; object-fit: cover; border: 2px solid var(--green);
+    }
+    .post-info { flex: 1;}
+    .post-info .name { font-weight: 700; font-size: 1rem;}
+    .post-info .time { font-size: 12px; color: #888;}
+    .post-subject { font-size: 12px; color: var(--saffron); font-weight: 600;}
+    .post-content { margin: 8px 0;}
+    .post-content img, .post-content video {
+      max-width: 100%; border-radius: 8px; margin-top: 5px;
+    }
+    .post-actions {
+      display: flex; gap: 18px; margin-top: 6px; font-size: 1.08rem;
+    }
+    .post-actions button {
+      background: none; border: none; color: var(--deep); cursor: pointer; font-size: 1.08rem;
+      display: flex; align-items: center; gap: 3px; transition: color 0.2s;
+    }
+    .post-actions button.liked, .post-actions button:active { color: var(--green);}
+    .post-actions .delete-btn { color: #c00; font-size: 1rem;}
+    .post-actions .edit-btn { color: var(--blue);}
+    .comments-section { margin-top: 7px;}
+    .comment {
+      display: flex; align-items: flex-start; gap: 6px; margin-bottom: 4px;
+    }
+    .comment .comment-profile { width: 20px; height: 20px; border-radius: 50%; object-fit: cover;}
+    .comment .comment-body { background: #f5f5f5; border-radius: 8px; padding: 5px 9px; font-size: 13px;}
+    .add-comment { display: flex; align-items: center; gap: 5px; margin-top: 5px;}
+    .add-comment input { flex: 1; padding: 5px 9px; border-radius: 8px; border: 1px solid #eee;}
+    .add-comment button { background: var(--green); color: #fff; border: none; border-radius: 7px; padding: 4px 10px; font-size: 13px;}
+    /* Profile */
+    .profile-section {
+      max-width: 600px; margin: 18px auto 0 auto; background: rgba(255,255,255,0.93); border-radius: 16px; box-shadow: 0 2px 8px rgba(19,136,8,0.07); padding: 18px 16px;
+      display: flex; gap: 18px; align-items: center;
+    }
+    .profile-pic {
+      width: 70px; height: 70px; border-radius: 50%; object-fit: cover; border: 3px solid var(--saffron);
+    }
+    .profile-info { flex: 1;}
+    .profile-info h3 { margin: 0 0 6px 0;}
+    .profile-info .bio { color: #444; font-size: 0.98rem;}
+    .profile-info .skills { margin-top: 7px; font-size: 0.95rem;}
+    .profile-info .skills span { background: var(--gray); color: var(--deep); border-radius: 8px; padding: 2px 8px; margin-right: 4px;}
+    .profile-edit-btn { background: var(--blue); color: #fff; border: none; border-radius: 7px; padding: 5px 12px; cursor: pointer;}
+    /* Achievements, Certificates, Monetization, Jobs, Quiz */
+    .achievements-section, .certificates-section, .monetization-section, .jobs-section, .quiz-section, .learning-section, .community-section {
+      max-width: 600px; margin: 18px auto 0 auto; background: rgba(255,255,255,0.93); border-radius: 16px; box-shadow: 0 2px 8px rgba(19,136,8,0.07); padding: 18px 16px;
+    }
+    .badges {
+      display: flex; gap: 18px; flex-wrap: wrap; margin-bottom: 12px;
+    }
+    .badge {
+      display: flex; flex-direction: column; align-items: center; gap: 2px;
+      background: #fff; border-radius: 10px; box-shadow: 0 2px 6px rgba(19,136,8,0.05); padding: 7px 11px;
+      font-size: 1.1rem;
+    }
+    .badge.gold { color: var(--gold);}
+    .badge.silver { color: var(--silver);}
+    .badge.bronze { color: var(--bronze);}
+    .cert-list { list-style: none; padding: 0;}
+    .cert-list li { margin-bottom: 8px; background: #f5f5f5; border-radius: 8px; padding: 7px 12px; display: flex; align-items: center; gap: 7px;}
+    .cert-list .fa-certificate { color: var(--gold);}
+    .monetization-dashboard {
+      display: flex; gap: 25px; flex-wrap: wrap; justify-content: space-between; margin-bottom: 13px;
+    }
+    .monetization-card {
+      background: #fff; border-radius: 12px; box-shadow: 0 2px 6px rgba(19,136,8,0.05); padding: 10px 15px; min-width: 130px;
+      text-align: center; font-weight: 700; font-size: 1.1rem;
+    }
+    .monetization-card .fa { font-size: 1.3rem; margin-bottom: 3px;}
+    .leaderboard { margin-top: 12px;}
+    .leaderboard h4 { margin-bottom: 7px;}
+    .leaderboard-list { list-style: none; padding: 0;}
+    .leaderboard-list li { margin-bottom: 6px; display: flex; align-items: center; gap: 6px;}
+    .leaderboard-list .fa-trophy { color: var(--gold);}
+    .quiz-q { font-weight: 600; margin-bottom: 9px;}
+    .quiz-options { display: flex; flex-direction: column; gap: 7px;}
+    .quiz-options button { background: var(--gray); border: none; border-radius: 7px; padding: 7px; font-size: 1rem; cursor: pointer;}
+    .quiz-options button.correct { background: var(--green); color: #fff;}
+    .quiz-options button.wrong { background: #c00; color: #fff;}
+    .live-btn { background: var(--saffron); color: #fff; border: none; border-radius: 8px; padding: 6px 14px; font-weight: 700; margin-top: 10px; cursor: pointer;}
+    .live-btn:hover { background: var(--green);}
+    /* Modal */
+    .modal {
+      display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100vw; height: 100vh;
+      background: rgba(0,0,0,0.48); backdrop-filter: blur(4px);
+      align-items: center; justify-content: center;
+    }
+    .modal-content {
+      background: #fff; border-radius: 16px; width: 95%; max-width: 360px;
+      margin: auto; box-shadow: 0 18px 60px rgba(0,0,0,0.18);
+      position: relative; overflow: hidden;
+      animation: fadeIn 0.3s;
+    }
+    @keyframes fadeIn { from {opacity:0;} to {opacity:1;} }
+    .close { position: absolute; top: 11px; right: 18px; font-size: 24px; color: #aaa; cursor: pointer;}
+    .modal-form-wrap { padding: 15px 15px 8px 15px;}
+    /* Footer */
+    footer {
+      background: var(--green); color: #fff; padding: 16px 0 8px 0; text-align: center; margin-top: 20px;
+    }
+    .footer-links { display: flex; gap: 14px; justify-content: center; margin-bottom: 6px;}
+    .footer-links a { color: #fff; text-decoration: none; font-weight: 600;}
+    .footer-links a:hover { color: var(--saffron);}
+    @media (max-width: 700px) {
+      .container { padding: 0 2px;}
+      .feed-section, .achievements-section, .certificates-section, .monetization-section, .jobs-section, .quiz-section, .learning-section, .profile-section, .community-section { padding: 10px 4px;}
+      .hero h1 { font-size: 1.1rem;}
+      .profile-section { flex-direction: column; align-items: flex-start;}
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <nav>
+      <div class="logo"><i class="fas fa-bolt"></i><span id="brandName">TED Talk</span></div>
+      <div class="nav-links">
+        <a href="#feed" id="navFeed">Feed</a>
+        <a href="#footer" id="navContact">Contact</a>
+        <button class="login-btn" onclick="alert('Demo only')">Login / Sign Up</button>
+        <div class="toggle-switch">
+          <input type="checkbox" id="langSwitch" onchange="toggleLang()">
+          <label for="langSwitch"></label>
+          <span id="langLabel">EN</span>
+        </div>
+      </div>
+    </nav>
+  </header>
+  <section class="hero">
+    <h1 id="heroTitle">India's All-in-One Platform: Learn, Teach, Play, Earn, Connect</h1>
+    <p id="heroDesc">
+      Feed, Stories, Live, Jobs, Learning, Quizzes, Monetization, Certificates, Community & more.<br>
+      For 18-50 years. Indian Tricolor. Copyright safe. Game changer!
+    </p>
+    <button class="cta-btn" onclick="showTabSection('feed')" id="heroBtn"><i class="fas fa-home"></i> Go to Feed</button>
+    <button class="cta-btn" onclick="showTabSection('profile')" style="background:var(--blue);"><i class="fas fa-user"></i> Profile</button>
+  </section>
+  <div class="tabs">
+    <button class="tab-btn active" onclick="showTabSection('feed')" id="tabFeed">Feed</button>
+    <button class="tab-btn" onclick="showTabSection('stories')" id="tabStories">Stories</button>
+    <button class="tab-btn" onclick="showTabSection('live')" id="tabLive">Live</button>
+    <button class="tab-btn" onclick="showTabSection('learning')" id="tabLearning">Learning</button>
+    <button class="tab-btn" onclick="showTabSection('jobs')" id="tabJobs">Jobs</button>
+    <button class="tab-btn" onclick="showTabSection('quiz')" id="tabQuiz">Quiz</button>
+    <button class="tab-btn" onclick="showTabSection('achievements')" id="tabAchievements">Achievements</button>
+    <button class="tab-btn" onclick="showTabSection('certificates')" id="tabCertificates">Certificates</button>
+    <button class="tab-btn" onclick="showTabSection('monetization')" id="tabMonetization">Monetization</button>
+    <button class="tab-btn" onclick="showTabSection('community')" id="tabCommunity">Community</button>
+    <button class="tab-btn" onclick="showTabSection('profile')" id="tabProfile">Profile</button>
+  </div>
+  <!-- Stories/Reels Section -->
+  <div class="tab-section" id="storiesSection">
+    <div class="story-bar">
+      <div class="story add" onclick="alert('Demo: Add your story!')">
+        <img src="https://via.placeholder.com/52x52.png?text=+" class="story-img" alt="Add">
+        <span>Add Story</span>
+      </div>
+      <div class="story">
+        <img src="https://randomuser.me/api/portraits/men/32.jpg" class="story-img" alt="User">
+        <span>Rohan</span>
+      </div>
+      <div class="story">
+        <img src="https://randomuser.me/api/portraits/women/45.jpg" class="story-img" alt="User">
+        <span>Priya</span>
+      </div>
+      <div class="story">
+        <img src="https://randomuser.me/api/portraits/men/65.jpg" class="story-img" alt="User">
+        <span>Arjun</span>
+      </div>
+      <div class="story">
+        <img src="https://randomuser.me/api/portraits/women/12.jpg" class="story-img" alt="User">
+        <span>Anjali</span>
+      </div>
+    </div>
+    <div style="text-align:center;margin-top:18px;">
+      <b>Stories & Reels</b> — Share moments, ideas, and inspiration with your network.
+    </div>
+  </div>
+  <!-- Feed Section -->
+  <div class="tab-section feed-section active" id="feedSection">
+    <div class="post-card" id="post1">
+      <div class="post-header">
+        <img src="https://randomuser.me/api/portraits/men/32.jpg" class="post-profile" alt="User">
+        <div class="post-info">
+          <span class="name">Rohan Sharma</span>
+          <div><span class="post-subject" id="post1Subject">Technology</span> • <span class="time">2h ago</span></div>
+        </div>
+        <button class="edit-btn" onclick="editPost('post1')" title="Edit"><i class="fas fa-edit"></i></button>
+        <button class="delete-btn" onclick="deletePost('post1')" title="Delete"><i class="fas fa-trash"></i></button>
+      </div>
+      <div class="post-content" id="post1Content">
+        <div id="post1Text">Check out my new robotics project! #Innovation</div>
+        <img src="https://images.unsplash.com/photo-1519389950473-47ba0277781c?auto=format&fit=crop&w=400&q=80" alt="Robotics">
+      </div>
+      <div class="post-actions">
+        <button onclick="likePost(this)" aria-label="Like"><i class="fas fa-heart"></i> <span>12</span></button>
+        <button onclick="toggleComments('post1')" aria-label="Comment"><i class="fas fa-comment"></i> <span>3</span></button>
+        <button onclick="alert('Demo: Post shared!')" aria-label="Share"><i class="fas fa-share"></i></button>
+      </div>
+      <div class="comments-section" id="post1Comments" style="display:none;">
+        <div class="comment">
+          <img src="https://randomuser.me/api/portraits/women/45.jpg" class="comment-profile" alt="User">
+          <div class="comment-body">Awesome! Can you share the code?</div>
+        </div>
+        <div class="comment">
+          <img src="https://randomuser.me/api/portraits/men/65.jpg" class="comment-profile" alt="User">
+          <div class="comment-body">Great work, Rohan!</div>
+        </div>
+        <div class="add-comment">
+          <input type="text" placeholder="Add a comment...">
+          <button type="button" onclick="addComment('post1')">Post</button>
+        </div>
+      </div>
+    </div>
+    <div class="post-card" id="post2">
+      <div class="post-header">
+        <img src="https://randomuser.me/api/portraits/women/45.jpg" class="post-profile" alt="User">
+        <div class="post-info">
+          <span class="name">Priya Singh</span>
+          <div><span class="post-subject" id="post2Subject">Education</span> • <span class="time">1h ago</span></div>
+        </div>
+        <button class="edit-btn" onclick="editPost('post2')" title="Edit"><i class="fas fa-edit"></i></button>
+        <button class="delete-btn" onclick="deletePost('post2')" title="Delete"><i class="fas fa-trash"></i></button>
+      </div>
+      <div class="post-content" id="post2Content">
+        <div id="post2Text">Tips for cracking the NDA exam! Stay focused and practice daily. #Defence</div>
+        <img src="https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=400&q=80" alt="NDA">
+      </div>
+      <div class="post-actions">
+        <button onclick="likePost(this)" aria-label="Like"><i class="fas fa-heart"></i> <span>20</span></button>
+        <button onclick="toggleComments('post2')" aria-label="Comment"><i class="fas fa-comment"></i> <span>2</span></button>
+        <button onclick="alert('Demo: Post shared!')" aria-label="Share"><i class="fas fa-share"></i></button>
+      </div>
+      <div class="comments-section" id="post2Comments" style="display:none;">
+        <div class="comment">
+          <img src="https://randomuser.me/api/portraits/men/32.jpg" class="comment-profile" alt="User">
+          <div class="comment-body">Thanks for sharing!</div>
+        </div>
+        <div class="add-comment">
+          <input type="text" placeholder="Add a comment...">
+          <button type="button" onclick="addComment('post2')">Post</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Live Section -->
+  <div class="tab-section" id="liveSection">
+    <h3><i class="fas fa-broadcast-tower"></i> Live Events & Podcasts</h3>
+    <button class="live-btn" onclick="openLiveModal()">Go Live / Join Live</button>
+    <ul class="cert-list" style="margin-top:18px;">
+      <li><i class="fas fa-microphone"></i> Defence Expert Podcast <span style="font-size:12px;color:#888;">(Live Now)</span></li>
+      <li><i class="fas fa-video"></i> Tech Innovation Webinar <span style="font-size:12px;color:#888;">(Starts 7pm)</span></li>
+      <li><i class="fas fa-chalkboard-teacher"></i> Education Q&A <span style="font-size:12px;color:#888;">(Tomorrow)</span></li>
+    </ul>
+    <div style="margin-top:12px;">Join live events, ask questions, network with experts!</div>
+  </div>
+  <!-- Learning Section -->
+  <div class="tab-section learning-section" id="learningSection">
+    <h3><i class="fas fa-graduation-cap"></i> Learning & Teaching</h3>
+    <ul class="cert-list">
+      <li><i class="fas fa-book"></i> Robotics Course <button class="cta-btn" style="padding:4px 14px;font-size:13px;" onclick="alert('Demo: Enrolled!')">Enroll</button></li>
+      <li><i class="fas fa-chalkboard-teacher"></i> NDA Prep Webinar <button class="cta-btn" style="padding:4px 14px;font-size:13px;" onclick="alert('Demo: Registered!')">Register</button></li>
+      <li><i class="fas fa-users"></i> Mentorship Program <button class="cta-btn" style="padding:4px 14px;font-size:13px;" onclick="alert('Demo: Joined!')">Join</button></li>
+    </ul>
+    <div style="margin-top:12px;">Learn, teach, and mentor in technology, education, defence!</div>
+  </div>
+  <!-- Jobs Section -->
+  <div class="tab-section jobs-section" id="jobsSection">
+    <h3><i class="fas fa-briefcase"></i> Jobs & Projects</h3>
+    <ul class="cert-list">
+      <li><i class="fas fa-briefcase"></i> Junior Robotics Engineer @ BharatTech <button class="cta-btn" style="padding:4px 14px;font-size:13px;" onclick="alert('Demo: Applied!')">Apply</button></li>
+      <li><i class="fas fa-briefcase"></i> Defence Analyst Intern @ DRDO <button class="cta-btn" style="padding:4px 14px;font-size:13px;" onclick="alert('Demo: Applied!')">Apply</button></li>
+      <li><i class="fas fa-briefcase"></i> Science Educator @ EduNation <button class="cta-btn" style="padding:4px 14px;font-size:13px;" onclick="alert('Demo: Applied!')">Apply</button></li>
+    </ul>
+    <div style="margin-top:12px;">Find jobs, internships, and research projects—AI-powered matching coming soon!</div>
+  </div>
+  <!-- Quiz Section -->
+  <div class="tab-section quiz-section" id="quizSection">
+    <h3><i class="fas fa-question-circle"></i> Science & Tech Quiz</h3>
+    <div class="quiz-q" id="quizQ">What is the capital of India?</div>
+    <div class="quiz-options">
+      <button onclick="quizAnswer(this, false)">Mumbai</button>
+      <button onclick="quizAnswer(this, true)">New Delhi</button>
+      <button onclick="quizAnswer(this, false)">Chennai</button>
+      <button onclick="quizAnswer(this, false)">Kolkata</button>
+    </div>
+    <div id="quizResult" style="margin-top:10px;font-weight:600;"></div>
+  </div>
+  <!-- Achievements Section -->
+  <div class="tab-section achievements-section" id="achievementsSection">
+    <h3><i class="fas fa-medal"></i> Achievements & Badges</h3>
+    <div class="badges">
+      <div class="badge gold"><i class="fas fa-trophy"></i> Quiz Champion</div>
+      <div class="badge silver"><i class="fas fa-star"></i> Top Educator</div>
+      <div class="badge bronze"><i class="fas fa-lightbulb"></i> Innovator</div>
+      <div class="badge" style="color:var(--blue);"><i class="fas fa-users"></i> Networker</div>
+    </div>
+    <div class="leaderboard">
+      <h4><i class="fas fa-trophy"></i> Leaderboard</h4>
+      <ul class="leaderboard-list">
+        <li><i class="fas fa-trophy"></i> Rohan Sharma - 2500 pts</li>
+        <li><i class="fas fa-trophy" style="color:var(--silver);"></i> Priya Singh - 2100 pts</li>
+        <li><i class="fas fa-trophy" style="color:var(--bronze);"></i> Arjun Verma - 1800 pts</li>
+      </ul>
+    </div>
+  </div>
+  <!-- Certificates Section -->
+  <div class="tab-section certificates-section" id="certificatesSection">
+    <h3><i class="fas fa-certificate"></i> Certificates</h3>
+    <ul class="cert-list">
+      <li><i class="fas fa-certificate"></i> Robotics Workshop - <b>TED Talk</b> <span style="font-size:12px;color:#888;">(2025)</span></li>
+      <li><i class="fas fa-certificate"></i> NDA Prep Bootcamp - <b>TED Talk</b> <span style="font-size:12px;color:#888;">(2025)</span></li>
+      <li><i class="fas fa-certificate"></i> Science Quiz Winner - <b>TED Talk</b> <span style="font-size:12px;color:#888;">(2025)</span></li>
+    </ul>
+    <div style="margin-top:12px;">Download your certificates for completed courses, events, and achievements.</div>
+  </div>
+  <!-- Monetization Section -->
+  <div class="tab-section monetization-section" id="monetizationSection">
+    <h3><i class="fas fa-rupee-sign"></i> Monetization Dashboard</h3>
+    <div class="monetization-dashboard">
+      <div class="monetization-card"><i class="fas fa-wallet"></i><br>₹1,200<br><span style="font-size:13px;">Earnings</span></div>
+      <div class="monetization-card"><i class="fas fa-gift"></i><br>₹300<br><span style="font-size:13px;">Rewards</span></div>
+      <div class="monetization-card"><i class="fas fa-star"></i><br>₹500<br><span style="font-size:13px;">Premium</span></div>
+    </div>
+    <div style="margin-top:12px;">Earn by teaching, winning quizzes, sharing projects, and participating in live events.<br>
+    <b>Withdraw via UPI or Gift Cards (Demo Only)</b></div>
+  </div>
+  <!-- Community/Group Section -->
+  <div class="tab-section community-section" id="communitySection">
+    <h3><i class="fas fa-users"></i> Community & Groups</h3>
+    <ul class="cert-list">
+      <li><i class="fas fa-users"></i> Bharat Innovators <button class="cta-btn" style="padding:4px 14px;font-size:13px;" onclick="alert('Demo: Joined!')">Join</button></li>
+      <li><i class="fas fa-users"></i> Defence Aspirants <button class="cta-btn" style="padding:4px 14px;font-size:13px;" onclick="alert('Demo: Joined!')">Join</button></li>
+      <li><i class="fas fa-users"></i> Teachers & Mentors <button class="cta-btn" style="padding:4px 14px;font-size:13px;" onclick="alert('Demo: Joined!')">Join</button></li>
+    </ul>
+    <div style="margin-top:12px;">Join groups, collaborate, and network with 30+ people at once!</div>
+  </div>
+  <!-- Profile Section -->
+  <div class="tab-section profile-section" id="profileSection">
+    <img src="https://randomuser.me/api/portraits/men/32.jpg" class="profile-pic" alt="Profile">
+    <div class="profile-info">
+      <h3>Rohan Sharma</h3>
+      <div class="bio">Robotics Enthusiast | Mentor | Quiz Champion</div>
+      <div class="skills"><b>Skills:</b> <span>Robotics</span><span>AI</span><span>Teaching</span><span>Defence</span></div>
+      <button class="profile-edit-btn" onclick="alert('Demo: Edit Profile!')"><i class="fas fa-edit"></i> Edit Profile</button>
+    </div>
+  </div>
+  <!-- Live Modal -->
+  <div class="modal" id="liveModal">
+    <div class="modal-content">
+      <span class="close" onclick="closeLiveModal()">&times;</span>
+      <div class="modal-form-wrap">
+        <h3 style="margin-bottom:10px;"><i class="fas fa-broadcast-tower"></i> Go Live / Join Live</h3>
+        <button class="cta-btn" onclick="alert('Demo: You are live!')"><i class="fas fa-video"></i> Start Live</button>
+        <button class="cta-btn" onclick="alert('Demo: Joined live session!')" style="background:var(--green);margin-top:10px;"><i class="fas fa-sign-in-alt"></i> Join Live</button>
+        <div style="margin-top:18px;font-size:14px;color:#555;">Host or join live podcasts, interviews, webinars & more. <br> (Demo only)</div>
+      </div>
+    </div>
+  </div>
+  <footer id="footer">
+    <div class="footer-links">
+      <a href="#feed" id="footerFeed">Feed</a>
+      <a href="#footer" id="footerContact">Contact</a>
+    </div>
+    <div id="footerCopy">© 2025 TED Talk. Made in India 🇮🇳</div>
+  </footer>
+  <script>
+    // Language data
+    const langData = {
+      en: {
+        brandName: "TED Talk",
+        navFeed: "Feed",
+        navContact: "Contact",
+        heroTitle: "India's All-in-One Platform: Learn, Teach, Play, Earn, Connect",
+        heroDesc: "Feed, Stories, Live, Jobs, Learning, Quizzes, Monetization, Certificates, Community & more.<br>For 18-50 years. Indian Tricolor. Copyright safe. Game changer!",
+        heroBtn: "Go to Feed",
+        tabFeed: "Feed",
+        tabStories: "Stories",
+        tabLive: "Live",
+        tabLearning: "Learning",
+        tabJobs: "Jobs",
+        tabQuiz: "Quiz",
+        tabAchievements: "Achievements",
+        tabCertificates: "Certificates",
+        tabMonetization: "Monetization",
+        tabCommunity: "Community",
+        tabProfile: "Profile",
+        post1Subject: "Technology",
+        post1Text: "Check out my new robotics project! #Innovation",
+        post2Subject: "Education",
+        post2Text: "Tips for cracking the NDA exam! Stay focused and practice daily. #Defence",
+        langLabel: "EN",
+        footerFeed: "Feed",
+        footerContact: "Contact",
+        footerCopy: "© 2025 TED Talk. Made in India 🇮🇳"
+      },
+      hi: {
+        brandName: "टेड टॉक",
+        navFeed: "फीड",
+        navContact: "संपर्क",
+        heroTitle: "भारत का ऑल-इन-वन प्लेटफॉर्म: सीखें, सिखाएँ, खेलें, कमाएँ, जुड़ें",
+        heroDesc: "फीड, स्टोरी, लाइव, जॉब्स, लर्निंग, क्विज़, कमाई, सर्टिफिकेट, कम्युनिटी और भी बहुत कुछ।<br>18-50 साल के लिए। तिरंगा थीम। कॉपीराइट फ्री। गेम चेंजर!",
+        heroBtn: "फीड पर जाएँ",
+        tabFeed: "फीड",
+        tabStories: "स्टोरी",
+        tabLive: "लाइव",
+        tabLearning: "लर्निंग",
+        tabJobs: "नौकरियाँ",
+        tabQuiz: "क्विज़",
+        tabAchievements: "उपलब्धियाँ",
+        tabCertificates: "सर्टिफिकेट्स",
+        tabMonetization: "कमाई",
+        tabCommunity: "समुदाय",
+        tabProfile: "प्रोफाइल",
+        post1Subject: "टेक्नोलॉजी",
+        post1Text: "देखिए मेरा नया रोबोटिक्स प्रोजेक्ट! #Innovation",
+        post2Subject: "एजुकेशन",
+        post2Text: "NDA एग्जाम क्रैक करने के टिप्स! फोकस रहें और रोज़ प्रैक्टिस करें। #Defence",
+        langLabel: "HI",
+        footerFeed: "फीड",
+        footerContact: "संपर्क",
+        footerCopy: "© 2025 टेड टॉक. भारत में बना 🇮🇳"
+      }
+    };
+    let currentLang = "en";
+    function setLang(lang) {
+      currentLang = lang;
+      const d = langData[lang];
+      document.getElementById('brandName').innerHTML = d.brandName;
+      document.getElementById('navFeed').innerHTML = d.navFeed;
+      document.getElementById('navContact').innerHTML = d.navContact;
+      document.getElementById('heroTitle').innerHTML = d.heroTitle;
+      document.getElementById('heroDesc').innerHTML = d.heroDesc;
+      document.getElementById('heroBtn').innerHTML = `<i class="fas fa-home"></i> ${d.heroBtn}`;
+      document.getElementById('tabFeed').innerHTML = d.tabFeed;
+      document.getElementById('tabStories').innerHTML = d.tabStories;
+      document.getElementById('tabLive').innerHTML = d.tabLive;
+      document.getElementById('tabLearning').innerHTML = d.tabLearning;
+      document.getElementById('tabJobs').innerHTML = d.tabJobs;
+      document.getElementById('tabQuiz').innerHTML = d.tabQuiz;
+      document.getElementById('tabAchievements').innerHTML = d.tabAchievements;
+      document.getElementById('tabCertificates').innerHTML = d.tabCertificates;
+      document.getElementById('tabMonetization').innerHTML = d.tabMonetization;
+      document.getElementById('tabCommunity').innerHTML = d.tabCommunity;
+      document.getElementById('tabProfile').innerHTML = d.tabProfile;
+      document.getElementById('post1Subject').innerHTML = d.post1Subject;
+      document.getElementById('post1Text').innerHTML = d.post1Text;
+      document.getElementById('post2Subject').innerHTML = d.post2Subject;
+      document.getElementById('post2Text').innerHTML = d.post2Text;
+      document.getElementById('langLabel').innerHTML = d.langLabel;
+      document.getElementById('footerFeed').innerHTML = d.footerFeed;
+      document.getElementById('footerContact').innerHTML = d.footerContact;
+      document.getElementById('footerCopy').innerHTML = d.footerCopy;
+    }
+    function toggleLang() {
+      const lang = document.getElementById('langSwitch').checked ? "hi" : "en";
+      setLang(lang);
+    }
+    function showTabSection(tab) {
+      const tabs = ['feed','stories','live','learning','jobs','quiz','achievements','certificates','monetization','community','profile'];
+      tabs.forEach(t => {
+        document.getElementById(t+'Section').classList.toggle('active', t===tab);
+        document.getElementById('tab'+t.charAt(0).toUpperCase()+t.slice(1)).classList.toggle('active', t===tab);
+      });
+      window.scrollTo({top: 0, behavior: 'smooth'});
+    }
+    function likePost(btn) {
+      btn.classList.toggle('liked');
+      let span = btn.querySelector('span');
+      let count = parseInt(span.innerText);
+      span.innerText = btn.classList.contains('liked') ? count+1 : count-1;
+    }
+    function toggleComments(postId) {
+      let el = document.getElementById(postId+"Comments");
+      el.style.display = el.style.display === "none" ? "" : "none";
+    }
+    function addComment(postId) {
+      let el = document.getElementById(postId+"Comments");
+      let input = el.querySelector('.add-comment input');
+      if(input.value.trim() !== "") {
+        let div = document.createElement('div');
+        div.className = "comment";
+        div.innerHTML = `<img src="https://randomuser.me/api/portraits/men/1.jpg" class="comment-profile" alt="User">
+          <div class="comment-body">${input.value}</div>`;
+        el.insertBefore(div, el.querySelector('.add-comment'));
+        input.value = "";
+      }
+    }
+    function deletePost(postId) {
+      document.getElementById(postId).remove();
+    }
+    function editPost(postId) {
+      let content = document.getElementById(postId+'Text');
+      let oldText = content.innerText;
+      let newText = prompt(currentLang === "en" ? "Edit your post:" : "अपना पोस्ट एडिट करें:", oldText);
+      if(newText !== null && newText.trim() !== "") content.innerText = newText;
+    }
+    let quizAnswered = false;
+    function quizAnswer(btn, correct) {
+      if(quizAnswered) return;
+      quizAnswered = true;
+      if(correct) {
+        btn.classList.add('correct');
+        document.getElementById('quizResult').innerHTML = currentLang === "en" ? "Correct! You win ₹100 & a badge!" : "सही! आपने ₹100 और एक बैज जीता!";
+      } else {
+        btn.classList.add('wrong');
+        document.getElementById('quizResult').innerHTML = currentLang === "en" ? "Wrong! Try again next time." : "गलत! अगली बार कोशिश करें।";
+      }
+    }
+    // Live modal
+    function openLiveModal() {
+      document.getElementById('liveModal').style.display = 'flex';
+      document.body.style.overflow = 'hidden';
+    }
+    function closeLiveModal() {
+      document.getElementById('liveModal').style.display = 'none';
+      document.body.style.overflow = '';
+    }
+    setLang("en");
+  </script>
+</body>
+</html>
